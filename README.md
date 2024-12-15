@@ -1,4 +1,4 @@
-** 硬件参数
+## 硬件参数
 - 名称: PowKiddy A9
 - 品牌: 霸王小子
 - 系统: Linux (buildroot 2018.02-rc3-g71955e8-dirty)
@@ -6,12 +6,12 @@
 - 内存: 256 MiB
 - 存储: 107 MiB
 
-** 固件导出
+## 固件导出
 1. 使用双工头USB线连接主机和游戏机，游戏机有2个USB口，用上面的那个。
 2. 按住SELECT, VOL+, VOL-, BACK这4个键的同时，再按游戏机电源键开机。此时应成功进入 Mask ROM 模式。
 3. 使用 `xrock flash` 命令查看 flash 信息，使用 `xrock flash read 0 220672 flash.bin` 命令导出固件。
 
-** 固件分析
+## 固件分析
 固件采用 GPT 分区，可通过 `fdisk -x flash.bin` 命令查看分区信息：
 
 ```
@@ -40,12 +40,12 @@ flash.bin6 198656 220638   21983 A2780000-0000-494B-8000-0798000034C0 C91D0000-0
 可以看到固件包含了 6 个分区，分别为 `uboot`，`trust`，`boot`，`rootfs`，`oem` 和 `userdata`。要挂载这些分区，可执行 `losetup --find --partscan --show flash.bin` 命令先获得 `/dev/loopNp{1..6}` 分区设备，再通过 `mount /dev/loop0p4 /tmp/rootfs` （假如 `losetup` 输出 `/dev/loop0`，我们要挂载 `rootfs` 分区到 `/tmp/rootfs`） 命令挂载即可。
 
 
-*** rootfs
+### rootfs
 - 通过 `readelf -a lib/libc.so.6 | grep GLIBC_` 命令判断出 glibc 的版本为 `2.26`。
 - 主界面程序 `/userdata/game` 由 `/etc/init.d/S50ui` 启动。
 - 内置的模拟器为 `/usr/bin/retroarch`，核心在 `/usr/local/share/minigui/res/game_lib` 目录。
 
-** 固件修改
+## 固件修改
 1. 准备交叉编译工具链，并编译 alsa-lib, eudev, libdrm 等软件。
 - gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf.tar.xz
 - alsa-lib
@@ -139,7 +139,7 @@ poweroff
 - 在 `/tmp/userdata` 完成修改后 `umount /tmp/userdata`
 - `xrock flash write 198656 userdata.img` 写回修改
 
-** sdcard 结构
+## sdcard 结构
 
 我分了 2 个区，sdb1 为 ext4， sdb2 作为 swap：
 ```
